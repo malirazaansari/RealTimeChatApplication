@@ -5,9 +5,10 @@ import { FiSearch, FiMenu } from "react-icons/fi";
 import { FaCaretDown } from "react-icons/fa";
 import { BsArrowRight } from "react-icons/bs";
 import { BiUser } from "react-icons/bi";
-import { GiThink } from "react-icons/gi";
+import { GiRamProfile, GiThink } from "react-icons/gi";
 import { IoMdClose } from "react-icons/io";
 import { useAuthStore } from "../store/useauthstore";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -58,8 +59,8 @@ const Dashboard = () => {
         </button>
 
         <div className="flex-1 p-4 overflow-y-auto">
-          <h1 className="mt-4 mb-10 font-bold text-[#008D9C] text-center text-xl">
-            CHATTING
+          <h1 className="mt-4 mb-5 font-bold text-[#008D9C] text-center text-xl">
+            Chat History
           </h1>
 
           <div className="flex justify-center mr-2 ml-2">
@@ -71,17 +72,34 @@ const Dashboard = () => {
             </button>
           </div>
 
-          <button className="flex justify-center items-center hover:bg-gray-100 mt-6 px-3 py-2 rounded-lg w-full text-black transition-colors">
-            <div className="flex justify-center items-center gap-2">
-              <IoSettingsOutline className="w-5 h-5" />
-              <span>Settings</span>
-            </div>
-          </button>
+          <div className="flex justify-center mr-2 ml-2">
+            <Link
+              to="/profileupdate"
+              className="bg-gradient-to-r from-[#008D9C] to-[#003136] hover:opacity-90 mt-2 px-3 py-2 rounded-lg w-full text-white transition-opacity"
+            >
+              <div className="flex justify-center items-center gap-2">
+                <GiRamProfile className="w-5 h-5" />
+                <span>Profile</span>
+              </div>
+            </Link>
+          </div>
+
+          <div className="flex justify-center mr-2 ml-2">
+            <Link
+              to="/settings"
+              className="bg-gradient-to-r from-[#008D9C] to-[#003136] hover:opacity-90 mt-2 px-3 py-2 rounded-lg w-full text-white transition-opacity"
+            >
+              <div className="flex justify-center items-center gap-2">
+                <IoSettingsOutline className="w-5 h-5" />
+                <span>Settings</span>
+              </div>
+            </Link>
+          </div>
 
           <div className="mt-6">
             <hr className="border-[#008D9C] border-t-2" />
             <h2 className="mt-3 font-medium text-black text-center text-sm">
-              History
+              Friends
             </h2>
 
             <div className="space-y-2 mt-3">
@@ -119,7 +137,7 @@ const Dashboard = () => {
 
       <div className="flex flex-col flex-1 bg-[#F4F4F4]">
         <div className="relative flex justify-between items-center border-[#008D9C] mx-5 mt-3 p-2 border-t border-b">
-          <h2 className="font-semibold text-[#008D9C] text-1xl">CHATTING</h2>
+          <h2 className="font-semibold text-[#008D9C] text-1xl">Chat here</h2>
           <div className="flex items-center">
             <div className="relative">
               <button
@@ -169,14 +187,14 @@ const Dashboard = () => {
             <div className="flex flex-col justify-end space-y-4">
               <div className="flex items-start space-x-2">
                 <div className="bg-[#008D9C] p-3 rounded-lg max-w-md">
-                  <p className="text-white">Hi, how are you?</p>
+                  <p className="text-white">Hi, Are you Ok?</p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-2">
                 <div className="bg-[#E8E8E8] p-3 rounded-lg max-w-md text-black">
                   <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Yep, Nothing wrong with me obvisuly i am ok OR I will ok.
                   </p>
                 </div>
               </div>

@@ -29,7 +29,7 @@ const App = () => {
     );
 
   return (
-    <>
+    <div data-theme="synthwave">
       <Router>
         <Routes>
           <Route
@@ -55,7 +55,7 @@ const App = () => {
         </Routes>
       </Router>
       <Toaster />
-    </>
+    </div>
   );
 };
 
