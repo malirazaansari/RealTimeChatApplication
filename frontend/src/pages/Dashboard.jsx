@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { IoSettingsOutline } from "react-icons/io5";
 import { FiSearch, FiMenu } from "react-icons/fi";
@@ -8,15 +7,13 @@ import { BsArrowRight } from "react-icons/bs";
 import { BiUser } from "react-icons/bi";
 import { GiThink } from "react-icons/gi";
 import { IoMdClose } from "react-icons/io";
+import { useAuthStore } from "../store/useauthstore";
 
 const Dashboard = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    navigate("/signin");
-  };
+  const { logout, authUser } = useAuthStore();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -106,15 +103,17 @@ const Dashboard = () => {
         </div>
 
         <div className="p-4 pr-6 pl-6">
-          <button
-            onClick={handleLogout}
-            className="bg-gradient-to-r from-[#008D9C] to-[#003136] hover:opacity-90 px-3 py-2 rounded-lg w-full text-white transition-opacity"
-          >
-            <div className="flex justify-center items-center">
-              <RiLogoutBoxRLine className="mr-2 w-5 h-5" />
-              <span>Log out</span>
-            </div>
-          </button>
+          {authUser && (
+            <button
+              onClick={logout}
+              className="bg-gradient-to-r from-[#008D9C] to-[#003136] hover:opacity-90 px-3 py-2 rounded-lg w-full text-white transition-opacity"
+            >
+              <div className="flex justify-center items-center">
+                <RiLogoutBoxRLine className="mr-2 w-5 h-5" />
+                <span>Log out</span>
+              </div>
+            </button>
+          )}
         </div>
       </div>
 

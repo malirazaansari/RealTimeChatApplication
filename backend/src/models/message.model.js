@@ -1,14 +1,14 @@
-import mongoose, { Mongoose, Schema } from "mongoose";
+import mongoose from "mongoose";
 
 const messageSchema = new mongoose.Schema(
   {
     sendId: {
-      type: Mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",
     },
     receiverId: {
-      type: Mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",
     },

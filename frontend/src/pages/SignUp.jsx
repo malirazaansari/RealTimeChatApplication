@@ -1,13 +1,40 @@
 import { Link } from "react-router-dom";
 import { MdEmail } from "react-icons/md";
-import { RiLockPasswordLine } from "react-icons/ri";
+import { RiLoader2Fill, RiLockPasswordLine } from "react-icons/ri";
 import { FcGoogle } from "react-icons/fc";
-import { BsMicrosoft } from "react-icons/bs";
+import { BsEye, BsMicrosoft } from "react-icons/bs";
 import { BiUser } from "react-icons/bi";
+import { useState } from "react";
+import { useAuthStore } from "../store/useauthstore";
+import { FiEyeOff } from "react-icons/fi";
+import toast from "react-hot-toast";
 
 const SignUp = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    name: "",
+  });
+
+  const { signup, isSigningUp } = useAuthStore();
+
+  const validateForm = () => {
+    if (!formData.name.trim()) return toast.error("Name is required");
+    if (!formData.email.trim()) return toast.error("Email is required");
+    if (!/\S+@\S+\.\S+/.test(formData.email))
+      return toast.error("Invalid email");
+    if (!formData.password) return toast.error("Password is required");
+    if (formData.password.length < 6)
+      return toast.error("Password must be at least 6 characters");
+
+    return true;
+  };
+
   const handleSignUp = (e) => {
     e.preventDefault();
+    const sucess = validateForm();
+    if (sucess === true) signup(formData);
   };
 
   return (
@@ -52,7 +79,11 @@ const SignUp = () => {
                 <input
                   type="text"
                   placeholder="Enter your name"
-                  className="px-3 py-2 pl-10 border rounded-lg focus:ring-2 focus:ring-[#008D9C] w-full focus:outline-none"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  className="bg-gray-300 px-3 py-2 pl-10 border rounded-lg focus:ring-2 focus:ring-[#008D9C] w-full focus:outline-none"
                 />
               </div>
             </div>
@@ -66,7 +97,11 @@ const SignUp = () => {
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="px-3 py-2 pl-10 border rounded-lg focus:ring-2 focus:ring-[#008D9C] w-full focus:outline-none"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  className="bg-gray-300 px-3 py-2 pl-10 border rounded-lg focus:ring-2 focus:ring-[#008D9C] w-full focus:outline-none"
                 />
               </div>
             </div>
@@ -78,24 +113,46 @@ const SignUp = () => {
               <div className="relative">
                 <RiLockPasswordLine className="top-1/2 left-3 absolute w-5 h-5 text-gray-500 -translate-y-1/2" />
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
-                  className="px-3 py-2 pl-10 border rounded-lg focus:ring-2 focus:ring-[#008D9C] w-full focus:outline-none"
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                  className="bg-gray-300 px-3 py-2 pl-10 border rounded-lg focus:ring-2 focus:ring-[#008D9C] w-full focus:outline-none"
                 />
+                <button
+                  type="button"
+                  className="right-0 absolute inset-y-0 flex items-center pr-3"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <FiEyeOff className="text-base-content/40 text-gray-900 size-5" />
+                  ) : (
+                    <BsEye className="text-base-content/40 text-gray-900 size-5" />
+                  )}
+                </button>
               </div>
             </div>
 
             <button
               type="submit"
+              disabled={isSigningUp}
               className="bg-[#008D9C] hover:bg-[#007483] mt-2 py-2 rounded-lg w-full text-white transition-colors"
             >
-              Create Account
+              {isSigningUp ? (
+                <>
+                  <RiLoader2Fill className="animate-spin size-5" />
+                </>
+              ) : (
+                "Create Account"
+              )}
             </button>
           </form>
 
           <p className="text-right mt-3 text-gray-600 text-sm">
             <Link
-              to="/signin"
+              to="/login"
               className="text-[#008D9C] underline"
             >
               Login
