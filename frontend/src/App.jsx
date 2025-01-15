@@ -13,9 +13,11 @@ import { useAuthStore } from "./store/useauthstore";
 import { useEffect } from "react";
 import { BiLoader } from "react-icons/bi";
 import { Toaster } from "react-hot-toast";
+import { useThemeStore } from "./store/useThemeStore";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const { theme } = useThemeStore();
 
   useEffect(() => {
     checkAuth();
@@ -29,7 +31,7 @@ const App = () => {
     );
 
   return (
-    <div data-theme="synthwave">
+    <div data-theme={theme}>
       <Router>
         <Routes>
           <Route
