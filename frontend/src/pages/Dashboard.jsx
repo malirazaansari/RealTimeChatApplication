@@ -3,9 +3,11 @@ import { useAuthStore } from "../store/useauthstore";
 import Sidebar from "../components/SideBar";
 import Navbar from "../components/navbar";
 import SelectedChat from "../components/SelectedChat";
-// import NoChatSelected from "../components/NoChatSelected";
+import { useChatStore } from "../store/useChatStore";
+import NoChatSelected from "../components/NoChatSelected";
 
 const Dashboard = () => {
+  const { selectedUser } = useChatStore();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { logout, authUser } = useAuthStore();
 
@@ -28,8 +30,7 @@ const Dashboard = () => {
         {/* Navbar with Sidebar Toggle Button */}
         <Navbar toggleSidebar={toggleSidebar} />
         {/* Replace with <NoChatSelected /> or <SelectedChat /> based on state */}
-        {/* <NoChatSelected /> */}
-        <SelectedChat />
+        {!selectedUser ? <NoChatSelected /> : <SelectedChat />}
       </div>
     </div>
   );
