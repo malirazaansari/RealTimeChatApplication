@@ -43,10 +43,9 @@ export const sendMessage = async (req, res) => {
     console.log("Authenticated user:", req.user);
 
     const { text, image } = req.body;
-    const { id: recipientId } = req.params; // `recipientId` is coming from the URL.
-    const senderId = req.user?._id; // `senderId` is coming from the authenticated user.
+    const { id: recipientId } = req.params;
+    const sendId = req.user?._id;
 
-    // Validate input
     if (!text && (!image || image === "null")) {
       return res
         .status(400)
@@ -57,7 +56,7 @@ export const sendMessage = async (req, res) => {
       return res.status(400).json({ error: "Invalid recipient ID" });
     }
 
-    if (!senderId) {
+    if (!sendId) {
       return res
         .status(401)
         .json({ error: "Unauthorized: User not authenticated" });
@@ -81,8 +80,8 @@ export const sendMessage = async (req, res) => {
     console.log("Creating new message...");
     const newMessage = new Message({
       text,
-      senderId, // Match the schema field name
-      receiverId: recipientId, // Match the schema field name
+      sendId,
+      receiverId: recipientId,
       image: imageUrl,
     });
 

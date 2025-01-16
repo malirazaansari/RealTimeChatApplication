@@ -16,7 +16,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="relative flex bg-white h-screen">
+    <div className="relative flex bg-white h-auto">
       {/* Sidebar */}
       <Sidebar
         isSidebarOpen={isSidebarOpen}

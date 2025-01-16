@@ -28,14 +28,40 @@ const MessageInput = () => {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  // const handleSendMessage = async (e) => {
+  //   e.preventDefault();
+  //   if (!text.trim() && !imagePreview) return;
+
+  //   try {
+  //     await sendMessage({
+  //       text: text.trim(),
+  //       image: imagePreview,
+  //     });
+
+  //     // Clear form
+  //     setText("");
+  //     setImagePreview(null);
+  //     if (fileInputRef.current) fileInputRef.current.value = "";
+  //   } catch (error) {
+  //     console.error("Failed to send message:", error);
+  //   }
+  // };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!text.trim() && !imagePreview) return;
+
+    // Consolidate validation
+    const trimmedText = text.trim();
+    if (!trimmedText && !imagePreview) {
+      console.error("Message must have text or an image.");
+      return;
+    }
 
     try {
+      // Call the sendMessage function
       await sendMessage({
-        text: text.trim(),
-        image: imagePreview,
+        text: trimmedText || null, // Send null if no text
+        image: imagePreview || null, // Send null if no image
       });
 
       // Clear form
@@ -44,6 +70,9 @@ const MessageInput = () => {
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error) {
       console.error("Failed to send message:", error);
+
+      // Optionally display error to the user
+      alert("Failed to send message. Please try again.");
     }
   };
 

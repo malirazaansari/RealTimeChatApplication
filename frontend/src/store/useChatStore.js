@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios";
-import { useAuthStore } from "./useauthstore";
+// import { useAuthStore } from "./useauthstore";
 
 export const useChatStore = create((set, get) => ({
   messages: [],
@@ -22,15 +22,31 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
+  // getMessages: async (userId) => {
+  //   set({ isMessagesLoading: true });
+  //   try {
+  //     const res = await axiosInstance.get(`/messages/${userId}`);
+  //     set({ messages: res.data });
+  //   } catch (error) {
+  //     toast.error(error.response.data.message);
+  //   } finally {
+  //     set({ isMessagesLoading: false });
+  //   }
+  // },
+
   getMessages: async (userId) => {
-    set({ isMessagesLoading: true });
+    set({ isMessagesLoading: true }); // Set loading state
     try {
       const res = await axiosInstance.get(`/messages/${userId}`);
-      set({ messages: res.data });
+      set({ messages: res.data }); // Update state with messages
     } catch (error) {
-      toast.error(error.response.data.message);
+      // Graceful error handling
+      const errorMessage =
+        error.response?.data?.message || "Failed to fetch messages";
+      toast.error(errorMessage);
+      console.error("Error fetching messages:", error);
     } finally {
-      set({ isMessagesLoading: false });
+      set({ isMessagesLoading: false }); // Reset loading state
     }
   },
 

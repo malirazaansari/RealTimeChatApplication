@@ -15,7 +15,7 @@ const NoChatSelected = () => {
 
         {/* Welcome Text */}
         <h2 className="font-bold text-2xl">
-          Welcome to Real Time Chat Application!
+          {`Welcome to OctaLoop's Chat Application!`}
         </h2>
         <p className="text-base-content/60">
           Select a conversation from the sidebar to start chatting.
