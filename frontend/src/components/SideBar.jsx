@@ -6,12 +6,12 @@ import { Link } from "react-router-dom";
 import { useChatStore } from "../store/useChatStore";
 import { useEffect } from "react";
 import SidebarSkeleton from "./sekelton/SideBarSekelton";
-// import { useAuthStore } from "../store/useauthstore";
+import { useAuthStore } from "../store/useauthstore";
 
 const Sidebar = ({ isSidebarOpen, toggleSidebar, authUser, logout }) => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
     useChatStore();
-  //   const { onlineUsers } = useAuthStore();
+  const { onlineUsers } = useAuthStore();
   useEffect(() => {
     getUsers();
   }, [getUsers]);
@@ -91,9 +91,9 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, authUser, logout }) => {
                 alt={user.name}
                 className="rounded-full object-cover size-12"
               />
-              {/* {onlineUsers.includes(user._id) && (
+              {onlineUsers.includes(user._id) && (
                 <span className="right-0 bottom-0 absolute bg-green-500 rounded-full ring-2 ring-zinc-900 size-3" />
-              )} */}
+              )}
             </div>
 
             {/* User info - only visible on larger screens */}
@@ -102,7 +102,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, authUser, logout }) => {
                 {user.name}
               </div>
               <div className="text-sm text-zinc-400">
-                {/* {onlineUsers.includes(user._id) ? "Online" : "Offline"} */}
+                {onlineUsers.includes(user._id) ? "Online" : "Offline"}
               </div>
             </div>
           </button>

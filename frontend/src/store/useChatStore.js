@@ -34,19 +34,41 @@ export const useChatStore = create((set, get) => ({
   //   }
   // },
 
-  getMessages: async (userId) => {
-    set({ isMessagesLoading: true }); // Set loading state
+  getMessages: async (userId, { before } = {}) => {
+    // `before` can be a timestamp or message ID to fetch older messages
+    const isFetchingMore = !!before; // Check if it's a fetch-more request
+
+    // Set loading state for initial fetch or older messages
+    set((state) => ({
+      isMessagesLoading: !isFetchingMore,
+      isFetchingMoreMessages: isFetchingMore,
+    }));
+
     try {
-      const res = await axiosInstance.get(`/messages/${userId}`);
-      set({ messages: res.data }); // Update state with messages
+      // Construct query parameters
+      const params = before ? { before } : {};
+      const res = await axiosInstance.get(`/messages/${userId}`, { params });
+
+      set((state) => ({
+        messages: isFetchingMore
+          ? [...res.data, ...state.messages] // Prepend older messages
+          : res.data, // Replace messages for initial fetch
+      }));
     } catch (error) {
-      // Graceful error handling
+      // Graceful error handling with an error state
       const errorMessage =
         error.response?.data?.message || "Failed to fetch messages";
       toast.error(errorMessage);
       console.error("Error fetching messages:", error);
+
+      // Optionally set an error state for the UI
+      set({ fetchMessagesError: errorMessage });
     } finally {
-      set({ isMessagesLoading: false }); // Reset loading state
+      // Reset loading states
+      set({
+        isMessagesLoading: false,
+        isFetchingMoreMessages: false,
+      });
     }
   },
 

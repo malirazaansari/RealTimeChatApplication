@@ -19,19 +19,37 @@ export const getUsersForSideBar = async (req, res) => {
 
 export const getMessages = async (req, res) => {
   try {
-    const { id: userToChatId } = req.params;
-    const myId = req.user._id;
+    const { id: userToChatId } = req.params; // Chat partner ID
+    const myId = req.user._id; // Logged-in user's ID
 
-    const messages = await Message.find({
+    // Convert IDs to ObjectId to make sure we compare them correctly
+    const myObjectId = new mongoose.Types.ObjectId(myId);
+    const chatPartnerObjectId = new mongoose.Types.ObjectId(userToChatId);
+
+    console.log("Logged-in User ID:", myObjectId);
+    console.log("Chat Partner ID:", chatPartnerObjectId);
+
+    // Updated query with the correct field names (`sendId` and `receiverId`)
+    const query = {
       $or: [
-        { sender: myId, recipient: userToChatId },
-        { sender: userToChatId, recipient: myId },
+        { sendId: myObjectId, receiverId: chatPartnerObjectId },
+        { sendId: chatPartnerObjectId, receiverId: myObjectId },
       ],
-    }).sort({ createdAt: "asc" });
+    };
+
+    console.log("Query:", query);
+
+    // Fetch messages from the database
+    const messages = await Message.find(query).sort({ createdAt: "asc" });
+    console.log("Messages Found:", messages);
+
+    if (messages.length === 0) {
+      console.warn("No messages found for the given users.");
+    }
 
     res.status(200).json(messages);
   } catch (error) {
-    console.log("Error in getMessages", error.message);
+    console.error("Error in getMessages:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

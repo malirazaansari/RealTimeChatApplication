@@ -6,19 +6,16 @@ import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser"; // parse
 import cors from "cors";
 import bodyParser from "body-parser";
-
-const app = express();
+import { app, server } from "./lib/socket.js";
 
 dotenv.config();
 
 const PORT = process.env.PORT;
 app.use((err, req, res, next) => {
   if (err.type === "entity.too.large") {
-    return res
-      .status(413)
-      .json({
-        error: "Payload too large. Please reduce the size of your request.",
-      });
+    return res.status(413).json({
+      error: "Payload too large. Please reduce the size of your request.",
+    });
   }
   next(err);
 });
@@ -29,7 +26,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log("server listening on PORT:" + PORT);
   connectDB();
 });

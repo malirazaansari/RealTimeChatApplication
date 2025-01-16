@@ -12,7 +12,9 @@ const SelectedChat = () => {
   const { authUser } = useAuthStore();
 
   useEffect(() => {
-    getMessages(selectedUser._id);
+    getMessages(selectedUser._id).then((result) =>
+      console.log("Fetched Messages:", result)
+    );
   }, [selectedUser._id, getMessages]);
 
   if (isMessagesLoading) {
@@ -33,11 +35,16 @@ const SelectedChat = () => {
           Messages will appear here
         </h1>
         <div className="flex-1 space-y-4 p-4 overflow-y-auto">
+          {!messages.length && (
+            <p className="text-center text-gray-500">
+              No messages to display. Start the conversation!
+            </p>
+          )}
           {messages.map((message) => (
             <div
               key={message._id}
               className={`chat ${
-                message.senderId === authUser._id ? "chat-end" : "chat-start"
+                message.senderId === authUser._id ? "chat-start" : "chat-end"
               }`}
             >
               <div className="avatar chat-image">
