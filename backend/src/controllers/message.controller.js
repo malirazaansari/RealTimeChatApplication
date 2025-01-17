@@ -23,6 +23,9 @@ export const getMessages = async (req, res) => {
     const { id: userToChatId } = req.params; // Chat partner ID
     const myId = req.user._id; // Logged-in user's ID
 
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
     // Convert IDs to ObjectId to make sure we compare them correctly
     const myObjectId = new mongoose.Types.ObjectId(myId);
     const chatPartnerObjectId = new mongoose.Types.ObjectId(userToChatId);
@@ -40,8 +43,13 @@ export const getMessages = async (req, res) => {
 
     console.log("Query:", query);
 
+    const { page = 1, limit = 20 } = req.query; // Default values for pagination
+
     // Fetch messages from the database
-    const messages = await Message.find(query).sort({ createdAt: "asc" });
+    const messages = await Message.find(query)
+      .sort({ createdAt: "asc" })
+      .skip((page - 1) * limit)
+      .limit(limit);
     console.log("Messages Found:", messages);
 
     if (messages.length === 0) {
@@ -64,6 +72,17 @@ export const sendMessage = async (req, res) => {
     const { text, image } = req.body;
     const { id: receiverId } = req.params;
     const sendId = req.user?._id;
+
+    if (!sendId) {
+      return res
+        .status(401)
+        .json({ error: "Unauthorized: User not authenticated" });
+    }
+
+    const receiver = await User.findById(receiverId);
+    if (!receiver) {
+      return res.status(404).json({ error: "Recipient user not found" });
+    }
 
     if (!text && (!image || image === "null")) {
       return res
@@ -108,9 +127,12 @@ export const sendMessage = async (req, res) => {
     console.log("Message saved successfully:", newMessage);
 
     const receiverSocketId = getReceiverSocketId(receiverId);
+    console.log("Receiver Socket ID:", receiverSocketId);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
       console.log(`Sent new message to user ${receiverId} through socket`);
+    } else {
+      console.warn(`No socket connection found for user ${receiverId}`);
     }
 
     res.status(201).json(newMessage);

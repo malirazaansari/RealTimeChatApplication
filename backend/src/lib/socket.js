@@ -12,15 +12,38 @@ const io = new Server(server, {
 });
 
 export function getReceiverSocketId(userId) {
-  return userSocketMap[userId];
+  const socketId = userSocketMap[userId];
+  if (!socketId) {
+    console.warn(`Socket ID not found for user ${userId}`);
+  }
+  return socketId;
 }
 
 const userSocketMap = {};
 
+// io.on("connection", (socket) => {
+//   console.log("a user connected", socket.id);
+//   const userId = socket.handshake.query.userId;
+//   if (userId) userSocketMap[userId] = socket.id;
+
+//   io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
+//   socket.on("disconnect", () => {
+//     console.log("a user disconnected", socket.id);
+//     delete userSocketMap[userId];
+//     io.emit("getOnlineUsers", Object.keys(userSocketMap));
+//   });
+// });
+
 io.on("connection", (socket) => {
   console.log("a user connected", socket.id);
   const userId = socket.handshake.query.userId;
-  if (userId) userSocketMap[userId] = socket.id;
+
+  if (userId) {
+    // Remove the old socket ID if it exists
+    userSocketMap[userId] = socket.id;
+    console.log("Current userSocketMap:", userSocketMap);
+  }
 
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
@@ -30,4 +53,5 @@ io.on("connection", (socket) => {
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });
+
 export { io, app, server };

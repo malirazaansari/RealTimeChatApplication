@@ -43,14 +43,14 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, authUser, logout }) => {
         <h1 className="mt-4 mb-5 font-bold text-[#008D9C] text-center text-xl">
           {authUser ? `${authUser.name}` : "Loading..."}
         </h1>
-        <div className="flex justify-center mr-2 ml-2">
+        {/* <div className="flex justify-center mr-2 ml-2">
           <button className="bg-gradient-to-r from-[#008D9C] to-[#003136] hover:opacity-90 mt-2 px-3 py-2 rounded-lg w-full text-white transition-opacity">
             <div className="flex justify-center items-center gap-2">
               <GiThink className="w-5 h-5" />
               <span>New Chat</span>
             </div>
           </button>
-        </div>
+        </div> */}
         <div className="flex justify-center mr-2 ml-2">
           <Link
             to="/profileupdate"

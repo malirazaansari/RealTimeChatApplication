@@ -72,7 +72,7 @@ export const logout = (req, res) => {
       maxAge: 0,
     });
     res.status(200).json({ message: "Logged out successfully" });
-  } catch {
+  } catch (error) {
     console.error("Error in Logout Controller", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -85,14 +85,16 @@ export const updateProfile = async (req, res) => {
     if (!profilepic) {
       return res.status(400).json({ message: "Profile Pic is required" });
     }
-    if (error) {
+    if (profilepic) {
       const uploadResponse = await cloudinary.uploader.upload(profilepic);
       const updatedUser = await User.findByIdAndUpdate(
         userId,
-        { profilePic: uploadResponse.secure.url },
+        { profilePic: uploadResponse.secure_url },
         { new: true }
       );
       res.status(200).json(updatedUser);
+    } else {
+      return res.status(400).json({ message: "Profile Pic is required" });
     }
   } catch (error) {
     console.error("Error in Update Profile Controller", error.message);
