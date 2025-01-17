@@ -41,7 +41,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, authUser, logout }) => {
 
       <div className="flex-1 p-4 border-b-2 border-blue-500">
         <h1 className="mt-4 mb-5 font-bold text-[#008D9C] text-center text-xl">
-          Chat History
+          {authUser ? `${authUser.name}` : "Loading..."}
         </h1>
         <div className="flex justify-center mr-2 ml-2">
           <button className="bg-gradient-to-r from-[#008D9C] to-[#003136] hover:opacity-90 mt-2 px-3 py-2 rounded-lg w-full text-white transition-opacity">
