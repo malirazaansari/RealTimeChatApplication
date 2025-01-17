@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useChatStore } from "../store/useChatStore";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
@@ -6,16 +6,38 @@ import MessageSkeleton from "./sekelton/MessageSkeleton";
 import { formatMessageTime } from "../lib/utils";
 import { useAuthStore } from "../store/useauthstore";
 const SelectedChat = () => {
-  const { messages, getMessages, isMessagesLoading, selectedUser } =
-    useChatStore();
+  const {
+    messages,
+    getMessages,
+    isMessagesLoading,
+    selectedUser,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  } = useChatStore();
 
   const { authUser } = useAuthStore();
+  const messageEndRef = useRef(null);
 
   useEffect(() => {
     getMessages(selectedUser._id).then((result) =>
       console.log("Fetched Messages:", result)
     );
-  }, [selectedUser._id, getMessages]);
+    subscribeToMessages();
+
+    return () => {
+      unsubscribeFromMessages();
+    };
+  }, [
+    selectedUser._id,
+    getMessages,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  ]);
+
+  useEffect(() => {
+    if (messageEndRef.current && messages)
+      messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   if (isMessagesLoading) {
     return (
@@ -43,8 +65,9 @@ const SelectedChat = () => {
           {messages.map((message) => (
             <div
               key={message._id}
+              ref={messageEndRef}
               className={`chat ${
-                message.senderId === authUser._id ? "chat-start" : "chat-end"
+                message.senderId === authUser._id ? "chat-end" : "chat-start"
               }`}
             >
               <div className="avatar chat-image">

@@ -80,7 +80,6 @@ export const useAuthStore = create((set, get) => ({
       toast.error(error.response.data.message);
     }
   },
-
   updateProfile: async (data) => {
     set({ isUpdatingProfile: true });
     try {
@@ -94,7 +93,6 @@ export const useAuthStore = create((set, get) => ({
       set({ isUpdatingProfile: false });
     }
   },
-
   connectSocket: () => {
     const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
@@ -112,7 +110,6 @@ export const useAuthStore = create((set, get) => ({
       set({ onlineUsers: userIds });
     });
   },
-
   disconnectSocket: () => {
     if (get().socket?.connected) get().socket.disconnect();
   },

@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
 import mongoose from "mongoose";
 import cloudinary from "../lib/cloudinary.js";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 
 export const getUsersForSideBar = async (req, res) => {
   try {
@@ -61,7 +62,7 @@ export const sendMessage = async (req, res) => {
     console.log("Authenticated user:", req.user);
 
     const { text, image } = req.body;
-    const { id: recipientId } = req.params;
+    const { id: receiverId } = req.params;
     const sendId = req.user?._id;
 
     if (!text && (!image || image === "null")) {
@@ -70,7 +71,7 @@ export const sendMessage = async (req, res) => {
         .json({ error: "Message text or image is required" });
     }
 
-    if (!recipientId || !mongoose.Types.ObjectId.isValid(recipientId)) {
+    if (!receiverId || !mongoose.Types.ObjectId.isValid(receiverId)) {
       return res.status(400).json({ error: "Invalid recipient ID" });
     }
 
@@ -99,12 +100,18 @@ export const sendMessage = async (req, res) => {
     const newMessage = new Message({
       text,
       sendId,
-      receiverId: recipientId,
+      receiverId,
       image: imageUrl,
     });
 
     await newMessage.save();
     console.log("Message saved successfully:", newMessage);
+
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+      console.log(`Sent new message to user ${receiverId} through socket`);
+    }
 
     res.status(201).json(newMessage);
   } catch (error) {
