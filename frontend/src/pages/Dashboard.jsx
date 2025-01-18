@@ -25,11 +25,8 @@ const Dashboard = () => {
         logout={logout}
       />
 
-      {/* Main Content */}
       <div className="flex flex-col flex-1">
-        {/* Navbar with Sidebar Toggle Button */}
         <Navbar toggleSidebar={toggleSidebar} />
-        {/* Replace with <NoChatSelected /> or <SelectedChat /> based on state */}
         {!selectedUser ? <NoChatSelected /> : <SelectedChat />}
       </div>
     </div>

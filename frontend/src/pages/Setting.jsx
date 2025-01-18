@@ -1,7 +1,7 @@
+import NavBar from "../components/navbar";
 import { THEMES } from "../constants";
 import { useThemeStore } from "../store/useThemeStore";
 import { IoIosSend } from "react-icons/io";
-import NavBar from "../components/NavBar";
 
 const PREVIEW_MESSAGES = [
   { id: 1, content: "Hey! How's it going?", isSent: false },

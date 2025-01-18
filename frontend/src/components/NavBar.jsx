@@ -3,18 +3,16 @@ import { FiSearch, FiMenu } from "react-icons/fi";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Navbar = ({ toggleSidebar }) => {
+const NavBar = ({ toggleSidebar }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const navigate = useNavigate(); // Initialize the navigate function
-
+  const navigate = useNavigate();
   const handleTitleClick = () => {
-    navigate("/"); // Navigate to the dashboard route
+    navigate("/");
   };
 
   return (
     <div className="relative flex justify-between items-center border-[#008D9C] mx-5 mt-3 p-2 border-t border-b">
       <div className="flex items-center gap-2">
-        {/* Sidebar Toggle Button (Visible only on smaller screens) */}
         <button
           onClick={toggleSidebar}
           className="lg:hidden bg-[#008D9C] hover:bg-[#007483] p-2 rounded-lg text-white transition-all"
@@ -73,4 +71,4 @@ const Navbar = ({ toggleSidebar }) => {
   );
 };
 
-export default Navbar;
+export default NavBar;

@@ -31,7 +31,7 @@ export const useAuthStore = create((set, get) => ({
     set({ isSigningUp: true });
     try {
       const res = await axiosInstance.post("/auth/signup", data);
-      console.log("API Response:", res); // Debugging log
+      console.log("API Response:", res);
       if (res?.data) {
         set({ authUser: res.data });
         toast.success("Account created successfully");
@@ -40,7 +40,7 @@ export const useAuthStore = create((set, get) => ({
         throw new Error("Unexpected API response format");
       }
     } catch (error) {
-      console.error("Signup Error:", error); // Log full error for debugging
+      console.error("Signup Error:", error);
       toast.error(
         error.response?.data?.message || "An unexpected error occurred"
       );
@@ -52,7 +52,7 @@ export const useAuthStore = create((set, get) => ({
     set({ isLogginingIn: true });
     try {
       const res = await axiosInstance.post("/auth/login", data);
-      console.log("API Response:", res); // Debugging log
+      console.log("API Response:", res);
       if (res?.data) {
         set({ authUser: res.data });
         toast.success("Logged in successfully");
@@ -62,7 +62,7 @@ export const useAuthStore = create((set, get) => ({
         throw new Error("Unexpected API response format");
       }
     } catch (error) {
-      console.error("Login Error:", error); // Log full error for debugging
+      console.error("Login Error:", error);
       toast.error(
         error.response?.data?.message || "An unexpected error occurred"
       );

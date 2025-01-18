@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios";
-import { useAuthStore } from "./useauthstore";
+import { useAuthStore } from "./useAuthStore";
 
 export const useChatStore = create((set, get) => ({
   messages: [],
@@ -23,36 +23,28 @@ export const useChatStore = create((set, get) => ({
   },
 
   getMessages: async (userId, { before } = {}) => {
-    // `before` can be a timestamp or message ID to fetch older messages
-    const isFetchingMore = !!before; // Check if it's a fetch-more request
+    const isFetchingMore = !!before;
 
-    // Set loading state for initial fetch or older messages
     set((state) => ({
       isMessagesLoading: !isFetchingMore,
       isFetchingMoreMessages: isFetchingMore,
     }));
 
     try {
-      // Construct query parameters
       const params = before ? { before } : {};
       const res = await axiosInstance.get(`/messages/${userId}`, { params });
 
       set((state) => ({
-        messages: isFetchingMore
-          ? [...res.data, ...state.messages] // Prepend older messages
-          : res.data, // Replace messages for initial fetch
+        messages: isFetchingMore ? [...res.data, ...state.messages] : res.data,
       }));
     } catch (error) {
-      // Graceful error handling with an error state
       const errorMessage =
         error.response?.data?.message || "Failed to fetch messages";
       toast.error(errorMessage);
       console.error("Error fetching messages:", error);
 
-      // Optionally set an error state for the UI
       set({ fetchMessagesError: errorMessage });
     } finally {
-      // Reset loading states
       set({
         isMessagesLoading: false,
         isFetchingMoreMessages: false,

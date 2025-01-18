@@ -20,20 +20,18 @@ export const getUsersForSideBar = async (req, res) => {
 
 export const getMessages = async (req, res) => {
   try {
-    const { id: userToChatId } = req.params; // Chat partner ID
-    const myId = req.user._id; // Logged-in user's ID
+    const { id: userToChatId } = req.params;
+    const myId = req.user._id;
 
     if (!req.user) {
       return res.status(401).json({ error: "Unauthorized" });
     }
-    // Convert IDs to ObjectId to make sure we compare them correctly
     const myObjectId = new mongoose.Types.ObjectId(myId);
     const chatPartnerObjectId = new mongoose.Types.ObjectId(userToChatId);
 
     console.log("Logged-in User ID:", myObjectId);
     console.log("Chat Partner ID:", chatPartnerObjectId);
 
-    // Updated query with the correct field names (`sendId` and `receiverId`)
     const query = {
       $or: [
         { sendId: myObjectId, receiverId: chatPartnerObjectId },
@@ -43,9 +41,8 @@ export const getMessages = async (req, res) => {
 
     console.log("Query:", query);
 
-    const { page = 1, limit = 20 } = req.query; // Default values for pagination
+    const { page = 1, limit = 20 } = req.query;
 
-    // Fetch messages from the database
     const messages = await Message.find(query)
       .sort({ createdAt: "asc" })
       .skip((page - 1) * limit)
