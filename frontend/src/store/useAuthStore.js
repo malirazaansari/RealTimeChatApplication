@@ -3,8 +3,7 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
-const BASE_URL =
-  import.meta.env.MODE === "development" ? "http://localhost:5001" : "/";
+const BASE_URL = "http://localhost:5001";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -93,21 +92,50 @@ export const useAuthStore = create((set, get) => ({
       set({ isUpdatingProfile: false });
     }
   },
+  // connectSocket: () => {
+  //   const { authUser } = get();
+  //   if (!authUser || get().socket?.connected) return;
+
+  //   const socket = io(BASE_URL, {
+  //     query: {
+  //       userId: authUser._id,
+  //     },
+  //   });
+  //   socket.connect();
+
+  //   set({ socket: socket });
+
+  //   socket.on("getOnlineUsers", (userIds) => {
+  //     set({ onlineUsers: userIds });
+  //   });
+  // },
   connectSocket: () => {
     const { authUser } = get();
+
+    // Ensure authUser is defined and socket is not already connected
     if (!authUser || get().socket?.connected) return;
 
+    console.log("Connecting socket with userId:", authUser._id); // Debug: Log userId
+
+    // Initialize socket connection
     const socket = io(BASE_URL, {
       query: {
-        userId: authUser._id,
+        userId: authUser._id, // Pass userId in query params
       },
     });
-    socket.connect();
 
-    set({ socket: socket });
+    // Save socket instance in the state
+    set({ socket });
 
+    // Listen for online users update from the server
     socket.on("getOnlineUsers", (userIds) => {
-      set({ onlineUsers: userIds });
+      console.log("Online users received:", userIds); // Debug: Log online users
+      set({ onlineUsers: userIds }); // Update online users in the store
+    });
+
+    // Handle socket connection errors
+    socket.on("connect_error", (err) => {
+      console.error("Socket connection error:", err); // Debug: Log connection errors
     });
   },
   disconnectSocket: () => {

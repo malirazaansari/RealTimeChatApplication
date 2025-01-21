@@ -22,18 +22,32 @@ export function getReceiverSocketId(userId) {
 const userSocketMap = {};
 io.on("connection", (socket) => {
   console.log("a user connected", socket.id);
+  console.log("Socket handshake query:", socket.handshake.query);
   const userId = socket.handshake.query.userId;
 
-  if (userId) {
-    userSocketMap[userId] = socket.id;
-    console.log("Current userSocketMap:", userSocketMap);
+  if (!userId || userId === "undefined") {
+    console.warn("No userId provided in handshake query");
+    return;
   }
+
+  userSocketMap[userId] = socket.id;
+  console.log(`User ${userId} connected with socket ID ${socket.id}`);
+  console.log("Current userSocketMap:", userSocketMap);
 
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
   socket.on("disconnect", () => {
-    console.log("a user disconnected", socket.id);
-    delete userSocketMap[userId];
+    const userId = Object.keys(userSocketMap).find(
+      (key) => userSocketMap[key] === socket.id
+    );
+
+    if (userId) {
+      delete userSocketMap[userId];
+      console.log(`User ${userId} disconnected`);
+    } else {
+      console.warn(`No userId found for disconnected socket ${socket.id}`);
+    }
+
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });

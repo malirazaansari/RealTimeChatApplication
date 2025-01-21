@@ -4,7 +4,7 @@ import { RiLoader2Fill, RiLockPasswordLine } from "react-icons/ri";
 import { FcGoogle } from "react-icons/fc";
 import { BsEye, BsMicrosoft } from "react-icons/bs";
 import { useState } from "react";
-import { useAuthStore } from "../store/useauthstore";
+import { useAuthStore } from "../store/useAuthStore";
 import { FiEyeOff } from "react-icons/fi";
 import toast from "react-hot-toast";
 const SignIn = () => {
