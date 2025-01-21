@@ -95,32 +95,67 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
+  // subscribeToMessages: () => {
+  //   const { selectedUser } = get();
+  //   const socket = useAuthStore.getState().socket;
+  //   if (!selectedUser || !socket || !socket.connected) return;
+
+  //   socket.off("newMessage");
+
+  //   socket.on("newMessage", (newMessage) => {
+  //     if (
+  //       newMessage.sendId === selectedUser._id ||
+  //       newMessage.receiverId === selectedUser._id
+  //     ) {
+  //       set({ messages: [...get().messages, newMessage] });
+  //     }
+  //   });
+
+  //   socket.on("connect", () => {
+  //     console.log("Socket reconnected. Resubscribing to messages...");
+  //     get().subscribeToMessages();
+  //   });
+  // },
+
   subscribeToMessages: () => {
     const { selectedUser } = get();
     const socket = useAuthStore.getState().socket;
+
     if (!selectedUser || !socket || !socket.connected) return;
 
+    // Clear any existing listeners to prevent duplicates
     socket.off("newMessage");
+    socket.off("messageRead"); // Unsubscribe from previous messageRead events
 
-    // socket.on("newMessage", (newMessage) => {
-    //   console.log("Received new message:", newMessage);
-    //   const isMessageSentFromSelectedUser =
-    //     newMessage.senderId === selectedUser._id;
-    //   if (!isMessageSentFromSelectedUser) return;
-
-    //   set({
-    //     messages: [...get().messages, newMessage],
-    //   });
-    // });
+    // Listen for new messages
     socket.on("newMessage", (newMessage) => {
       if (
         newMessage.sendId === selectedUser._id ||
         newMessage.receiverId === selectedUser._id
       ) {
-        set({ messages: [...get().messages, newMessage] });
+        const updatedMessages = [...get().messages, newMessage];
+        set({ messages: updatedMessages });
+
+        // Automatically mark the message as read if the receiver is the current user
+        if (newMessage.receiverId === useAuthStore.getState().authUser._id) {
+          socket.emit("readMessage", {
+            messageId: newMessage._id,
+            senderId: newMessage.sendId,
+          });
+        }
       }
     });
 
+    // Handle "readMessage" event from the server
+    socket.on("messageRead", ({ messageId }) => {
+      set((state) => ({
+        messages: state.messages.map((message) =>
+          message._id === messageId ? { ...message, status: "read" } : message
+        ),
+      }));
+    });
+
+    // Handle reconnection
     socket.on("connect", () => {
       console.log("Socket reconnected. Resubscribing to messages...");
       get().subscribeToMessages();

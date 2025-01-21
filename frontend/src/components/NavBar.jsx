@@ -1,16 +1,31 @@
-import { FaCaretDown, FaCaretRight } from "react-icons/fa";
+import { FaCaretDown } from "react-icons/fa";
 import { FiSearch, FiMenu } from "react-icons/fi";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useChatStore } from "../store/useChatStore"; // Assuming you have a zustand store for chat
 
 const NavBar = ({ toggleSidebar }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
-  const handleTitleClick = () => {
-    navigate("/");
-  };
+  // Fetch users from chat store
+  const { users, getUsers, setSelectedUser } = useChatStore();
+
+  useEffect(() => {
+    getUsers(); // Fetch users when component mounts
+  }, [getUsers]);
+
+  useEffect(() => {
+    // Filter users based on search query
+    setFilteredUsers(
+      users.filter((user) =>
+        user.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    );
+  }, [searchQuery, users]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -26,6 +41,12 @@ const NavBar = ({ toggleSidebar }) => {
     };
   }, []);
 
+  const handleUserClick = (user) => {
+    setSelectedUser(user); // Set the selected user in the chat store
+    navigate(`/`); // Navigate to the chat page for the user
+    setIsDropdownOpen(false); // Close the dropdown
+  };
+
   return (
     <div className="relative flex justify-between items-center border-[#008D9C] mx-5 mt-3 p-2 border-t border-b">
       <div className="flex items-center gap-2">
@@ -37,7 +58,7 @@ const NavBar = ({ toggleSidebar }) => {
         </button>
         <h2
           className="font-semibold text-[#008D9C] text-1xl cursor-pointer"
-          onClick={handleTitleClick}
+          onClick={() => navigate("/")}
         >
           Chat Application
         </h2>
@@ -63,6 +84,8 @@ const NavBar = ({ toggleSidebar }) => {
                     type="text"
                     placeholder="Search"
                     className="px-3 py-2 pr-8 border rounded-lg focus:ring-2 focus:ring-[#008D9C] w-full focus:outline-none"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                   />
                   <div className="right-0 absolute inset-y-0 flex items-center pr-2">
                     <FiSearch className="w-5 h-5 text-gray-400" />
@@ -70,17 +93,25 @@ const NavBar = ({ toggleSidebar }) => {
                 </div>
               </div>
               <div className="max-h-60 overflow-y-auto">
-                {[1, 2, 3, 4].map((friend) => (
+                {filteredUsers.map((user) => (
                   <div
-                    key={friend}
+                    key={user._id}
+                    onClick={() => handleUserClick(user)}
                     className="flex items-center gap-3 hover:bg-gray-50 p-2 cursor-pointer"
                   >
                     <div className="flex justify-center items-center bg-[#008D9C] rounded-full w-8 h-8">
-                      <FaCaretRight className="w-5 h-5 text-white" />
+                      <img
+                        src={user.profilePic || "/avatar.png"}
+                        alt={user.name}
+                        className="rounded-full w-full h-full object-cover"
+                      />
                     </div>
-                    <span className="text-gray-700">Friend</span>
+                    <span className="text-gray-700">{user.name}</span>
                   </div>
                 ))}
+                {!filteredUsers.length && (
+                  <p className="text-center text-gray-500">No friends found</p>
+                )}
               </div>
             </div>
           )}
