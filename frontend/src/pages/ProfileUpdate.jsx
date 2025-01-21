@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuthStore } from "../store/useauthstore";
+import { useAuthStore } from "../store/useAuthStore";
 import { BiCamera, BiUser } from "react-icons/bi";
 import { CiMail } from "react-icons/ci";
 import Navbar from "../components/NavBar";

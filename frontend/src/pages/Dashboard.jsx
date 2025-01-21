@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Sidebar from "../components/SideBar";
-import Navbar from "../components/navbar";
+import Navbar from "../components/NavBar";
 import SelectedChat from "../components/SelectedChat";
 import { useChatStore } from "../store/useChatStore";
 import NoChatSelected from "../components/NoChatSelected";

@@ -1,4 +1,4 @@
-import { FaCaretDown } from "react-icons/fa";
+import { FaCaretDown, FaCaretRight } from "react-icons/fa";
 import { FiSearch, FiMenu } from "react-icons/fi";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -76,7 +76,7 @@ const NavBar = ({ toggleSidebar }) => {
                     className="flex items-center gap-3 hover:bg-gray-50 p-2 cursor-pointer"
                   >
                     <div className="flex justify-center items-center bg-[#008D9C] rounded-full w-8 h-8">
-                      <FaCaretDown className="w-5 h-5 text-white" />
+                      <FaCaretRight className="w-5 h-5 text-white" />
                     </div>
                     <span className="text-gray-700">Friend</span>
                   </div>

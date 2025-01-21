@@ -1,4 +1,4 @@
-import NavBar from "../components/navbar";
+import NavBar from "../components/NavBar";
 import { THEMES } from "../constants";
 import { useThemeStore } from "../store/useThemeStore";
 import { IoIosSend } from "react-icons/io";

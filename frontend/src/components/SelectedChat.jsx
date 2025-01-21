@@ -35,7 +35,10 @@ const SelectedChat = () => {
 
   useEffect(() => {
     if (messageEndRef.current && messages)
-      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+      messageEndRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
   }, [messages]);
 
   if (isMessagesLoading) {
@@ -63,6 +66,7 @@ const SelectedChat = () => {
         {messages.map((message) => (
           <div
             key={message._id}
+            // ref={messageEndRef}
             className={`chat ${
               message.senderId === authUser._id ? "chat-end" : "chat-start"
             }`}
@@ -96,6 +100,7 @@ const SelectedChat = () => {
             </div>
           </div>
         ))}
+        <div ref={messageEndRef}></div>
       </div>
 
       <div className="bottom-0 z-10 sticky bg-[#F4F4F4] p-4 border-t">
