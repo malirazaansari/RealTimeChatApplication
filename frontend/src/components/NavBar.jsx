@@ -1,14 +1,30 @@
 import { FaCaretDown } from "react-icons/fa";
 import { FiSearch, FiMenu } from "react-icons/fi";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const NavBar = ({ toggleSidebar }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const navigate = useNavigate();
+
   const handleTitleClick = () => {
     navigate("/");
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="relative flex justify-between items-center border-[#008D9C] mx-5 mt-3 p-2 border-t border-b">
@@ -28,12 +44,15 @@ const NavBar = ({ toggleSidebar }) => {
       </div>
 
       <div className="flex items-center">
-        <div className="relative">
+        <div
+          className="relative"
+          ref={dropdownRef}
+        >
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center gap-2 bg-[#008D9C] px-4 py-1 rounded-lg text-white"
           >
-            Add Friend
+            Friends
             <FaCaretDown className="w-5 h-5" />
           </button>
           {isDropdownOpen && (
