@@ -75,6 +75,9 @@ export const sendMessage = async (req, res) => {
         .status(401)
         .json({ error: "Unauthorized: User not authenticated" });
     }
+    if (!receiverId || !mongoose.Types.ObjectId.isValid(receiverId)) {
+      return res.status(400).json({ error: "Invalid recipient ID" });
+    }
 
     const receiver = await User.findById(receiverId);
     if (!receiver) {
@@ -126,10 +129,17 @@ export const sendMessage = async (req, res) => {
     const receiverSocketId = getReceiverSocketId(receiverId);
     console.log("Receiver Socket ID:", receiverSocketId);
     if (receiverSocketId) {
-      io.to(receiverSocketId).emit("newMessage", newMessage);
-      console.log(`Sent new message to user ${receiverId} through socket`);
+      io.to(receiverSocketId).emit("newMessage", newMessage, (ack) => {
+        if (ack) {
+          console.log(`Message delivered to user ${receiverId} through socket`);
+        } else {
+          console.warn(`Failed to deliver message to user ${receiverId}`);
+        }
+      });
     } else {
       console.warn(`No socket connection found for user ${receiverId}`);
+      newMessage.status = "undelivered"; // Add a status field to handle retries
+      await newMessage.save();
     }
 
     res.status(201).json(newMessage);
