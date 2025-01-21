@@ -49,56 +49,56 @@ const SelectedChat = () => {
   }
 
   return (
-    <div className="flex flex-col flex-1 bg-[#F4F4F4]">
-      <div className="flex-1 overflow-y-auto">
+    <div className="flex flex-col bg-[#F4F4F4] h-full">
+      <div className="top-0 z-10 sticky bg-[#F4F4F4] p-4 border-b">
         <ChatHeader />
-        <h1 className="mt-4 mb-5 font-bold text-[#008D9C] text-center text-xl">
-          Messages will appear here
-        </h1>
-        <div className="flex-1 space-y-4 p-4 overflow-y-auto">
-          {!messages.length && (
-            <p className="text-center text-gray-500">
-              No messages to display. Start the conversation!
-            </p>
-          )}
-          {messages.map((message) => (
-            <div
-              key={message._id}
-              ref={messageEndRef}
-              className={`chat ${
-                message.senderId === authUser._id ? "chat-end" : "chat-start"
-              }`}
-            >
-              <div className="avatar chat-image">
-                <div className="border rounded-full size-10">
-                  <img
-                    src={
-                      message.senderId === authUser._id
-                        ? authUser.profilePic || "/avatar.png"
-                        : selectedUser.profilePic || "/avatar.png"
-                    }
-                    alt="profile pic"
-                  />
-                </div>
-              </div>
-              <div className="mb-1 chat-header">
-                <time className="opacity-50 ml-1 text-xs">
-                  {formatMessageTime(message.createdAt)}
-                </time>
-              </div>
-              <div className="flex flex-col chat-bubble">
-                {message.image && (
-                  <img
-                    src={message.image}
-                    alt="Attachment"
-                    className="mb-2 rounded-md sm:max-w-[200px]"
-                  />
-                )}
-                {message.text && <p>{message.text}</p>}
+      </div>
+
+      <div className="flex-1 space-y-4 p-4 pb-[72px] overflow-y-auto">
+        {!messages.length && (
+          <p className="text-center text-gray-500">
+            No messages to display. Start the conversation!
+          </p>
+        )}
+        {messages.map((message) => (
+          <div
+            key={message._id}
+            className={`chat ${
+              message.senderId === authUser._id ? "chat-end" : "chat-start"
+            }`}
+          >
+            <div className="avatar chat-image">
+              <div className="border rounded-full size-10">
+                <img
+                  src={
+                    message.senderId === authUser._id
+                      ? authUser.profilePic || "/avatar.png"
+                      : selectedUser.profilePic || "/avatar.png"
+                  }
+                  alt="profile pic"
+                />
               </div>
             </div>
-          ))}
-        </div>
+            <div className="mb-1 chat-header">
+              <formatMessageTime className="opacity-50 ml-1 text-xs">
+                {new Date(message.createdAt).toLocaleTimeString()}
+              </formatMessageTime>
+            </div>
+            <div className="flex flex-col chat-bubble">
+              {message.image && (
+                <img
+                  src={message.image}
+                  alt="Attachment"
+                  className="mb-2 rounded-md sm:max-w-[200px]"
+                />
+              )}
+              {message.text && <p>{message.text}</p>}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="bottom-0 z-10 sticky bg-[#F4F4F4] p-4 border-t">
         <MessageInput />
       </div>
     </div>
