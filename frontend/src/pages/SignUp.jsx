@@ -27,7 +27,13 @@ const SignUp = () => {
     if (!formData.password) return toast.error("Password is required");
     if (formData.password.length < 6)
       return toast.error("Password must be at least 6 characters");
-
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{6,}$/;
+    if (!passwordRegex.test(formData.password)) {
+      return toast.error(
+        "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character"
+      );
+    }
     return true;
   };
 
