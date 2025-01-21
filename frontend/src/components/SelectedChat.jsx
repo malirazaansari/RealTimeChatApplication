@@ -147,7 +147,7 @@ const SelectedChat = () => {
     //     <MessageInput />
     //   </div>
     // </div>
-    <div className="flex flex-col bg-[#F4F4F4] h-full">
+    <div className="flex flex-col bg-[#F4F4F4] w-full h-full">
       {/* Chat Header */}
       <div className="top-0 z-10 sticky bg-[#F4F4F4] p-4 border-b">
         <ChatHeader />
