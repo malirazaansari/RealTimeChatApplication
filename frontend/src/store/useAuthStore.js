@@ -92,50 +92,29 @@ export const useAuthStore = create((set, get) => ({
       set({ isUpdatingProfile: false });
     }
   },
-  // connectSocket: () => {
-  //   const { authUser } = get();
-  //   if (!authUser || get().socket?.connected) return;
 
-  //   const socket = io(BASE_URL, {
-  //     query: {
-  //       userId: authUser._id,
-  //     },
-  //   });
-  //   socket.connect();
-
-  //   set({ socket: socket });
-
-  //   socket.on("getOnlineUsers", (userIds) => {
-  //     set({ onlineUsers: userIds });
-  //   });
-  // },
   connectSocket: () => {
     const { authUser } = get();
 
-    // Ensure authUser is defined and socket is not already connected
     if (!authUser || get().socket?.connected) return;
 
-    console.log("Connecting socket with userId:", authUser._id); // Debug: Log userId
+    console.log("Connecting socket with userId:", authUser._id);
 
-    // Initialize socket connection
     const socket = io(BASE_URL, {
       query: {
-        userId: authUser._id, // Pass userId in query params
+        userId: authUser._id,
       },
     });
 
-    // Save socket instance in the state
     set({ socket });
 
-    // Listen for online users update from the server
     socket.on("getOnlineUsers", (userIds) => {
-      console.log("Online users received:", userIds); // Debug: Log online users
-      set({ onlineUsers: userIds }); // Update online users in the store
+      console.log("Online users received:", userIds);
+      set({ onlineUsers: userIds });
     });
 
-    // Handle socket connection errors
     socket.on("connect_error", (err) => {
-      console.error("Socket connection error:", err); // Debug: Log connection errors
+      console.error("Socket connection error:", err);
     });
   },
   disconnectSocket: () => {

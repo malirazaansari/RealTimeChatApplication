@@ -138,7 +138,7 @@ export const sendMessage = async (req, res) => {
       });
     } else {
       console.warn(`No socket connection found for user ${receiverId}`);
-      newMessage.status = "undelivered"; // Add a status field to handle retries
+      newMessage.status = "undelivered";
       await newMessage.save();
     }
 

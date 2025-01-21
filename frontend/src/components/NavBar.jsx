@@ -2,7 +2,7 @@ import { FaCaretDown } from "react-icons/fa";
 import { FiSearch, FiMenu } from "react-icons/fi";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useChatStore } from "../store/useChatStore"; // Assuming you have a zustand store for chat
+import { useChatStore } from "../store/useChatStore";
 
 const NavBar = ({ toggleSidebar }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -11,15 +11,13 @@ const NavBar = ({ toggleSidebar }) => {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
-  // Fetch users from chat store
   const { users, getUsers, setSelectedUser } = useChatStore();
 
   useEffect(() => {
-    getUsers(); // Fetch users when component mounts
+    getUsers();
   }, [getUsers]);
 
   useEffect(() => {
-    // Filter users based on search query
     setFilteredUsers(
       users.filter((user) =>
         user.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -42,9 +40,9 @@ const NavBar = ({ toggleSidebar }) => {
   }, []);
 
   const handleUserClick = (user) => {
-    setSelectedUser(user); // Set the selected user in the chat store
-    navigate(`/`); // Navigate to the chat page for the user
-    setIsDropdownOpen(false); // Close the dropdown
+    setSelectedUser(user);
+    navigate(`/`);
+    setIsDropdownOpen(false);
   };
 
   return (

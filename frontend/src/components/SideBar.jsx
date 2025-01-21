@@ -67,7 +67,6 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, authUser, logout }) => {
           </div>
         </div>
 
-        {/* Scrollable content section */}
         <div className="flex-1 py-3 overflow-y-auto">
           <div className="top-0 z-10 sticky bg-white px-4 py-2">
             <label className="flex items-center gap-2 cursor-pointer">

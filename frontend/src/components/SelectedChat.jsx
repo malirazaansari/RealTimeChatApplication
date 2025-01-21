@@ -89,71 +89,11 @@ const SelectedChat = () => {
   }
 
   return (
-    // <div className="flex flex-col bg-[#F4F4F4] h-full">
-    //   <div className="top-0 z-10 sticky bg-[#F4F4F4] p-4 border-b">
-    //     <ChatHeader />
-    //   </div>
-
-    //   <div className="flex-1 space-y-4 p-4 pb-[72px] overflow-y-auto">
-    //     {!messages.length && (
-    //       <p className="text-center text-gray-500">
-    //         No messages to display. Start the conversation!
-    //       </p>
-    //     )}
-    //     {messages.map((message) => (
-    //       <div
-    //         key={message._id}
-    //         className={`chat ${
-    //           message.senderId === authUser._id ? "chat-end" : "chat-start"
-    //         }`}
-    //       >
-    //         <div className="avatar chat-image">
-    //           <div className="border rounded-full size-10">
-    //             <img
-    //               src={
-    //                 message.senderId === authUser._id
-    //                   ? authUser.profilePic || "/avatar.png"
-    //                   : selectedUser.profilePic || "/avatar.png"
-    //               }
-    //               alt="profile pic"
-    //             />
-    //           </div>
-    //         </div>
-    //         <div className="mb-1 chat-header">
-    //           <formatMessageTime className="opacity-50 ml-1 text-xs">
-    //             {new Date(message.createdAt).toLocaleTimeString()}
-    //           </formatMessageTime>
-    //         </div>
-    //         <div className="flex flex-col chat-bubble">
-    //           {message.image && (
-    //             <img
-    //               src={message.image}
-    //               alt="Attachment"
-    //               className="mb-2 rounded-md sm:max-w-[200px]"
-    //             />
-    //           )}
-    //           {message.text && <p>{message.text}</p>}
-    //         </div>
-    //       </div>
-    //     ))}
-    //     <div>
-    //       {/* Existing Chat UI */}
-    //       {isTyping && <p>{selectedUser.name} is typing...</p>}
-    //     </div>
-    //     <div ref={messageEndRef}></div>
-    //   </div>
-
-    //   <div className="bottom-0 z-10 sticky bg-[#F4F4F4] p-4 border-t">
-    //     <MessageInput />
-    //   </div>
-    // </div>
     <div className="flex flex-col bg-[#F4F4F4] w-full h-full">
-      {/* Chat Header */}
       <div className="top-0 z-10 sticky bg-[#F4F4F4] p-4 border-b">
         <ChatHeader />
       </div>
 
-      {/* Messages Area */}
       <div className="flex-1 space-y-4 p-4 pb-[72px] overflow-y-auto">
         {!messages.length && (
           <p className="text-center text-gray-500">
@@ -161,7 +101,6 @@ const SelectedChat = () => {
           </p>
         )}
 
-        {/* Render messages */}
         {messages.map((message) => (
           <div
             key={message._id}
@@ -169,7 +108,6 @@ const SelectedChat = () => {
               message.senderId === authUser._id ? "chat-end" : "chat-start"
             }`}
           >
-            {/* Avatar */}
             <div className="avatar chat-image">
               <div className="border rounded-full size-10">
                 <img
@@ -183,14 +121,12 @@ const SelectedChat = () => {
               </div>
             </div>
 
-            {/* Message Header */}
             <div className="mb-1 chat-header">
               <span className="opacity-50 ml-1 text-xs">
                 {new Date(message.createdAt).toLocaleTimeString()}
               </span>
             </div>
 
-            {/* Message Content */}
             <div className="flex flex-col chat-bubble">
               {message.image && (
                 <img
@@ -201,7 +137,6 @@ const SelectedChat = () => {
               )}
               {message.text && <p>{message.text}</p>}
 
-              {/* Read/Unread Status */}
               {message.senderId === authUser._id && (
                 <span className="mt-1 text-gray-500 text-xs">
                   {message.status === "read" ? "Seen" : "Delivered"}
@@ -211,18 +146,15 @@ const SelectedChat = () => {
           </div>
         ))}
 
-        {/* Typing Indicator */}
         {isTyping && (
           <p className="text-gray-500 text-sm">
             {selectedUser.name} is typing...
           </p>
         )}
 
-        {/* Scroll to the bottom */}
         <div ref={messageEndRef}></div>
       </div>
 
-      {/* Message Input */}
       <div className="bottom-0 z-10 sticky bg-[#F4F4F4] p-4 border-t">
         <MessageInput />
       </div>

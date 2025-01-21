@@ -38,7 +38,6 @@ io.on("connection", (socket) => {
 
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
-  // Listen for typing events
   socket.on("typing", ({ senderId, receiverId }) => {
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
@@ -46,7 +45,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  // Listen for stop typing events
   socket.on("stopTyping", ({ senderId, receiverId }) => {
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
@@ -59,10 +57,8 @@ io.on("connection", (socket) => {
       console.error(`Invalid messageId: ${messageId}`);
       return;
     }
-    // Update message status in the database
     await Message.findByIdAndUpdate(messageId, { status: "read" });
 
-    // Notify the sender
     const senderSocketId = getReceiverSocketId(senderId);
     if (senderSocketId) {
       io.to(senderSocketId).emit("messageRead", { messageId });
