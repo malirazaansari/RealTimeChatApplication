@@ -5,7 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import { BsEye, BsMicrosoft } from "react-icons/bs";
 import { BiUser } from "react-icons/bi";
 import { useState } from "react";
-import { useAuthStore } from "../store/useauthstore";
+import { useAuthStore } from "../store/useAuthStore";
 import { FiEyeOff } from "react-icons/fi";
 import toast from "react-hot-toast";
 
@@ -21,6 +21,10 @@ const SignUp = () => {
 
   const validateForm = () => {
     if (!formData.name.trim()) return toast.error("Name is required");
+    const nameRegex = /^[a-zA-Z\s]+$/;
+    if (!nameRegex.test(formData.name)) {
+      return toast.error("Name cannot contain numbers or special characters");
+    }
     if (!formData.email.trim()) return toast.error("Email is required");
     if (!/\S+@\S+\.\S+/.test(formData.email))
       return toast.error("Invalid email");
