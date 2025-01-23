@@ -47,14 +47,14 @@ const SignUp = () => {
     if (sucess === true) signup(formData);
   };
 
-  const handleGoogleSignUp = async () => {
-    try {
-      await signInWithGoogle(); // Call the Google sign-in function
-    } catch (error) {
-      toast.error("Google sign-up failed");
-      console.error("Error in Google sign-up:", error);
-    }
-  };
+  // const handleGoogleSignUp = async () => {
+  //   try {
+  //     await signInWithGoogle(); // Call the Google sign-in function
+  //   } catch (error) {
+  //     toast.error("Google sign-up failed");
+  //     console.error("Error in Google sign-up:", error);
+  //   }
+  // };
 
   return (
     <div className="relative grid grid-cols-1 md:grid-cols-12 bg-white min-h-screen overflow-hidden">
@@ -183,11 +183,11 @@ const SignUp = () => {
               or continue with
             </p>
             <div className="gap-4 grid grid-cols-2">
-              <button className="flex justify-center items-center bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-gray-600 transition-colors">
-                <FcGoogle
-                  onClick={handleGoogleSignUp}
-                  className="mr-2 w-5 h-5"
-                />
+              <button
+                onClick={signInWithGoogle}
+                className="flex justify-center items-center bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-gray-600 transition-colors"
+              >
+                <FcGoogle className="mr-2 w-5 h-5" />
                 Google
               </button>
               <button className="flex justify-center items-center bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-gray-600 transition-colors">

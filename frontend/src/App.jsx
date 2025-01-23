@@ -9,7 +9,7 @@ import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import Setting from "./pages/Setting";
 import ProfileUpdate from "./pages/ProfileUpdate";
-import { useAuthStore } from "./store/useauthstore";
+import { useAuthStore } from "./store/useAuthStore";
 import { useEffect } from "react";
 import { BiLoader } from "react-icons/bi";
 import { Toaster } from "react-hot-toast";

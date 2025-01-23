@@ -3,6 +3,7 @@ import {
   checkAuth,
   login,
   logout,
+  signInWithGoogle,
   signup,
   updateProfile,
 } from "../controllers/auth.controller.js";
@@ -21,32 +22,6 @@ router.post("/logout", logout);
 router.put("/update-profile", protectRoute, updateProfile);
 router.get("/check", protectRoute, checkAuth);
 
-router.post("/google-login", verifyFirebaseToken, async (req, res) => {
-  try {
-    const { uid, email, name, picture } = req.user;
-
-    // Find or create the user in the database
-    let user = await User.findOne({ firebaseId: uid });
-    if (!user) {
-      user = new User({
-        firebaseId: uid,
-        email,
-        name,
-        profilePicture: picture,
-      });
-      await user.save();
-    }
-
-    // Create a JWT for further authentication
-    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
-      expiresIn: "7d",
-    });
-
-    res.json({ user, token });
-  } catch (error) {
-    console.error("Error in Google login:", error.message);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+router.post("/google-login", verifyFirebaseToken, signInWithGoogle);
 
 export default router;

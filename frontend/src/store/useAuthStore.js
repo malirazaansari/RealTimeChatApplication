@@ -14,6 +14,7 @@ export const useAuthStore = create((set, get) => ({
   isLogginingIn: false,
   isUpdatingProfile: false,
   onlineUsers: [],
+  isPopupOpen: false,
   socket: null,
 
   checkAuth: async () => {
@@ -72,22 +73,33 @@ export const useAuthStore = create((set, get) => ({
     }
   },
   signInWithGoogle: async () => {
-    set({ isLogginingIn: true });
-    try {
-      // Firebase Google sign-in
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
+    const { isPopupOpen } = get();
+    if (isPopupOpen) return; // Prevent multiple popups
 
-      // Optionally, send the ID token to your backend for validation or create a user
+    set({ isPopupOpen: true, isLogginingIn: true });
+
+    try {
+      // Firebase Google Sign-In
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log("Firebase sign-in result:", result);
+
+      // Retrieve the Firebase ID token
+      const user = result.user;
+      console.log("Firebase user details:", result.user);
+
       const idToken = await user.getIdToken();
-      const res = await axiosInstance.post("/auth/google-login", {
+      console.log("Firebase ID token:", idToken);
+
+      // Send the token to the backend for validation
+      const response = await axiosInstance.post("/auth/google-login", {
         token: idToken,
       });
+      console.log("API Response:", response);
 
-      if (res?.data) {
-        set({ authUser: res.data });
+      if (response?.data) {
+        set({ authUser: response.data }); // Update the authenticated user in the store
         toast.success("Logged in with Google successfully");
-        get().connectSocket();
+        get().connectSocket(); // Connect the socket
       } else {
         throw new Error("Unexpected API response format");
       }
@@ -95,7 +107,7 @@ export const useAuthStore = create((set, get) => ({
       console.error("Google Sign-In Error:", error.message);
       toast.error("Google Sign-In failed");
     } finally {
-      set({ isLogginingIn: false });
+      set({ isPopupOpen: false, isLogginingIn: false });
     }
   },
   logout: async () => {
@@ -121,7 +133,6 @@ export const useAuthStore = create((set, get) => ({
       set({ isUpdatingProfile: false });
     }
   },
-
   connectSocket: () => {
     const { authUser } = get();
 

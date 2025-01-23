@@ -2,6 +2,7 @@ import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
 import cloudinary from "../lib/cloudinary.js";
 import bcrypt from "bcrypt";
+import admin from "../lib/firebaseAdmin.js";
 
 export const signup = async (req, res) => {
   const { name, email, password } = req.body;
@@ -109,5 +110,45 @@ export const checkAuth = (req, res) => {
   } catch (error) {
     console.error("Error in Check Auth Controller", error.message);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const signInWithGoogle = async (req, res) => {
+  console.log("Google login request received:", req.body);
+
+  try {
+    const { token } = req.body;
+    console.log("Firebase token received:", token);
+
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    console.log("Decoded token:", decodedToken);
+
+    const { uid, email, name, picture } = decodedToken;
+    let user = await User.findOne({ firebaseId: uid });
+
+    if (!user) {
+      user = new User({
+        firebaseId: uid,
+        email,
+        name,
+        profilePicture: picture,
+      });
+      await user.save();
+    }
+
+    const idToken = await user.getIdToken();
+    console.log("Generated ID Token:", idToken);
+    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    console.log("User authenticated successfully:", user);
+    res.json({ user, token: jwtToken });
+  } catch (error) {
+    console.error("Error in Google Login:", error.message);
+    if (error.code === "auth/argument-error") {
+      return res.status(400).json({ error: "Invalid Firebase token" });
+    }
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

@@ -17,20 +17,10 @@ const SignIn = () => {
   const { login, isLogginingIn, signInWithGoogle } = useAuthStore();
 
   const validateForm = () => {
-    // if (!formData.email.trim()) return toast.error("Email is required");
     if (!/\S+@\S+\.\S+/.test(formData.email))
       return toast.error("Invalid email");
     if (!formData.password) return toast.error("Password is required");
-    // if (formData.password.length < 6)
-    //   return toast.error("Password must be at least 6 characters");
-    // Check password strength
-    // const passwordRegex =
-    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{6,}$/;
-    // if (!passwordRegex.test(formData.password)) {
-    //   return toast.error(
-    //     "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character"
-    // );
-    // }
+
     return true;
   };
 
@@ -41,12 +31,31 @@ const SignIn = () => {
     if (sucess === true) login(formData);
   };
 
-  const handleGoogleLogin = async () => {
+  // const handleGoogleSignIn = async () => {
+  //   try {
+  //     console.log("Initiating Google sign-in...");
+  //     const result = await signInWithPopup(auth, googleProvider);
+  //     console.log("Sign-in successful:", result.user);
+  //   } catch (error) {
+  //     console.error("Error during Google sign-in:", error.message);
+  //   }
+  // };
+  // const handleGoogleSignIn = async () => {
+  //   try {
+  //     console.log("Initiating Google sign-in...");
+  //     const data = await signInWithGoogle();
+  //     toast.success("Google Sign-In successful");
+  //     console.log("Backend response:", data);
+  //   } catch (error) {
+  //     console.error("Error during Google Sign-In:", error);
+  //   }
+  // };
+  const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle(); // Call the Google sign-in function
     } catch (error) {
-      toast.error("Google sign-in failed");
-      console.error("Google sign-in failed:", error);
+      toast.error("Google sign-up failed");
+      console.error("Error in Google sign-up:", error);
     }
   };
 
@@ -167,10 +176,10 @@ const SignIn = () => {
             <div className="gap-4 grid grid-cols-2">
               <button className="flex justify-center items-center bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-gray-600 transition-colors">
                 <FcGoogle
-                  onClick={handleGoogleLogin}
+                  onClick={handleGoogleSignIn}
                   className="mr-2 w-5 h-5"
                 />
-                Google
+                Connect with Google
               </button>
               <button className="flex justify-center items-center bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-gray-600 transition-colors">
                 <BsMicrosoft className="mr-2 w-5 h-5" />
