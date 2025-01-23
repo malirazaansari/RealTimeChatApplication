@@ -1,2 +1,4 @@
 backend/node_modules/
 backend/.env
+backend/src/firebase/olchat-auth-firebase-adminsdk-fbsvc-d2d4c04087.json
+backend/src/firebase/service-accout-key.json

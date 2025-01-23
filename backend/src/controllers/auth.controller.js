@@ -37,34 +37,6 @@ export const signup = async (req, res) => {
   }
 };
 
-// export const login = async (req, res) => {
-//   const { email, password } = req.body;
-//   try {
-//     const user = await User.findOne({ email });
-//     if (!email || !password) {
-//       return res
-//         .status(400)
-//         .json({ message: "Email and password are required" });
-//     }
-//     if (!email) {
-//       return res.status(400).json({ message: "INVALID CREADEANTIALS" });
-//     }
-
-//     const isPasswordCorrect = await bcrypt.compare(password, user.password);
-//     if (!isPasswordCorrect) {
-//       return res.status(400).json({ message: "INVALID CREDENTIALS" });
-//     }
-//     generateToken(user._id, res);
-//     res.status(200).json({
-//       id: user._id,
-//       name: user.name,
-//       email: user.email,
-//     });
-//   } catch (error) {
-//     console.error("Error in Login Controller", error.message);
-//     res.status(500).json({ message: "Internal Server Error" });
-//   }
-// };
 export const login = async (req, res) => {
   const { email, password } = req.body;
 

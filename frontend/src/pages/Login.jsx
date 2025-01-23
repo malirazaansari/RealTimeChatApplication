@@ -14,23 +14,23 @@ const SignIn = () => {
     password: "",
   });
 
-  const { login, isLogginingIn } = useAuthStore();
+  const { login, isLogginingIn, signInWithGoogle } = useAuthStore();
 
   const validateForm = () => {
-    if (!formData.email.trim()) return toast.error("Email is required");
+    // if (!formData.email.trim()) return toast.error("Email is required");
     if (!/\S+@\S+\.\S+/.test(formData.email))
       return toast.error("Invalid email");
     if (!formData.password) return toast.error("Password is required");
-    if (formData.password.length < 6)
-      return toast.error("Password must be at least 6 characters");
+    // if (formData.password.length < 6)
+    //   return toast.error("Password must be at least 6 characters");
     // Check password strength
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{6,}$/;
-    if (!passwordRegex.test(formData.password)) {
-      return toast.error(
-        "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character"
-      );
-    }
+    // const passwordRegex =
+    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{6,}$/;
+    // if (!passwordRegex.test(formData.password)) {
+    //   return toast.error(
+    //     "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character"
+    // );
+    // }
     return true;
   };
 
@@ -40,6 +40,16 @@ const SignIn = () => {
 
     if (sucess === true) login(formData);
   };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signInWithGoogle(); // Call the Google sign-in function
+    } catch (error) {
+      toast.error("Google sign-in failed");
+      console.error("Google sign-in failed:", error);
+    }
+  };
+
   return (
     <div className="relative grid grid-cols-1 md:grid-cols-12 bg-white min-h-screen overflow-hidden">
       <div className="absolute inset-0">
@@ -156,7 +166,10 @@ const SignIn = () => {
             </p>
             <div className="gap-4 grid grid-cols-2">
               <button className="flex justify-center items-center bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-gray-600 transition-colors">
-                <FcGoogle className="mr-2 w-5 h-5" />
+                <FcGoogle
+                  onClick={handleGoogleLogin}
+                  className="mr-2 w-5 h-5"
+                />
                 Google
               </button>
               <button className="flex justify-center items-center bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-gray-600 transition-colors">
