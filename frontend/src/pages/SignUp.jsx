@@ -47,15 +47,6 @@ const SignUp = () => {
     if (sucess === true) signup(formData);
   };
 
-  // const handleGoogleSignUp = async () => {
-  //   try {
-  //     await signInWithGoogle(); // Call the Google sign-in function
-  //   } catch (error) {
-  //     toast.error("Google sign-up failed");
-  //     console.error("Error in Google sign-up:", error);
-  //   }
-  // };
-
   return (
     <div className="relative grid grid-cols-1 md:grid-cols-12 bg-white min-h-screen overflow-hidden">
       <div className="absolute inset-0">

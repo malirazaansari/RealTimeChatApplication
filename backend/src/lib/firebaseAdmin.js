@@ -1,7 +1,6 @@
 import admin from "firebase-admin";
 import { readFileSync } from "fs";
 
-// Initialize Firebase Admin using service account key
 const serviceAccount = JSON.parse(
   readFileSync(
     new URL(

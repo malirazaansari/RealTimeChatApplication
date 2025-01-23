@@ -31,28 +31,9 @@ const SignIn = () => {
     if (sucess === true) login(formData);
   };
 
-  // const handleGoogleSignIn = async () => {
-  //   try {
-  //     console.log("Initiating Google sign-in...");
-  //     const result = await signInWithPopup(auth, googleProvider);
-  //     console.log("Sign-in successful:", result.user);
-  //   } catch (error) {
-  //     console.error("Error during Google sign-in:", error.message);
-  //   }
-  // };
-  // const handleGoogleSignIn = async () => {
-  //   try {
-  //     console.log("Initiating Google sign-in...");
-  //     const data = await signInWithGoogle();
-  //     toast.success("Google Sign-In successful");
-  //     console.log("Backend response:", data);
-  //   } catch (error) {
-  //     console.error("Error during Google Sign-In:", error);
-  //   }
-  // };
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithGoogle(); // Call the Google sign-in function
+      await signInWithGoogle();
     } catch (error) {
       toast.error("Google sign-up failed");
       console.error("Error in Google sign-up:", error);
