@@ -2,8 +2,6 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
-import { auth, googleProvider } from "./firebase.js";
-import { signInWithPopup } from "firebase/auth";
 
 const BASE_URL = "http://localhost:5001";
 
@@ -14,7 +12,6 @@ export const useAuthStore = create((set, get) => ({
   isLogginingIn: false,
   isUpdatingProfile: false,
   onlineUsers: [],
-  isPopupOpen: false,
   socket: null,
 
   checkAuth: async () => {
@@ -70,41 +67,6 @@ export const useAuthStore = create((set, get) => ({
       );
     } finally {
       set({ isLogginingIn: false });
-    }
-  },
-  signInWithGoogle: async () => {
-    const { isPopupOpen } = get();
-    if (isPopupOpen) return;
-
-    set({ isPopupOpen: true, isLogginingIn: true });
-
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      console.log("Firebase sign-in result:", result);
-
-      const user = result.user;
-      console.log("Firebase user details:", result.user);
-
-      const idToken = await user.getIdToken();
-      console.log("Firebase ID token:", idToken);
-
-      const response = await axiosInstance.post("/auth/google-login", {
-        token: idToken,
-      });
-      console.log("API Response:", response);
-
-      if (response?.data) {
-        set({ authUser: response.data });
-        toast.success("Logged in with Google successfully");
-        get().connectSocket();
-      } else {
-        throw new Error("Unexpected API response format");
-      }
-    } catch (error) {
-      console.error("Google Sign-In Error:", error.message);
-      toast.error("Google Sign-In failed");
-    } finally {
-      set({ isPopupOpen: false, isLogginingIn: false });
     }
   },
   logout: async () => {

@@ -46,7 +46,7 @@ const NavBar = ({ toggleSidebar }) => {
   };
 
   return (
-    <div className="relative flex justify-between items-center border-[#008D9C] mx-5 mt-3 p-2 border-t border-b w-full">
+    <div className="relative flex justify-between items-center border-[#008D9C] mt-3 p-2 border-t border-b w-full">
       <div className="flex items-center gap-2">
         <button
           onClick={toggleSidebar}

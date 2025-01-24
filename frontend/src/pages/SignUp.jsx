@@ -17,7 +17,7 @@ const SignUp = () => {
     name: "",
   });
 
-  const { signup, isSigningUp, signInWithGoogle } = useAuthStore();
+  const { signup, isSigningUp } = useAuthStore();
 
   const validateForm = () => {
     if (!formData.name.trim()) return toast.error("Name is required");
@@ -174,10 +174,7 @@ const SignUp = () => {
               or continue with
             </p>
             <div className="gap-4 grid grid-cols-2">
-              <button
-                onClick={signInWithGoogle}
-                className="flex justify-center items-center bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-gray-600 transition-colors"
-              >
+              <button className="flex justify-center items-center bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-gray-600 transition-colors">
                 <FcGoogle className="mr-2 w-5 h-5" />
                 Google
               </button>

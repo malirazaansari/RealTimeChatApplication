@@ -14,7 +14,7 @@ const SignIn = () => {
     password: "",
   });
 
-  const { login, isLogginingIn, signInWithGoogle } = useAuthStore();
+  const { login, isLogginingIn } = useAuthStore();
 
   const validateForm = () => {
     if (!/\S+@\S+\.\S+/.test(formData.email))
@@ -29,15 +29,6 @@ const SignIn = () => {
     const sucess = validateForm();
 
     if (sucess === true) login(formData);
-  };
-
-  const handleGoogleSignIn = async () => {
-    try {
-      await signInWithGoogle();
-    } catch (error) {
-      toast.error("Google sign-up failed");
-      console.error("Error in Google sign-up:", error);
-    }
   };
 
   return (
@@ -156,10 +147,7 @@ const SignIn = () => {
             </p>
             <div className="gap-4 grid grid-cols-2">
               <button className="flex justify-center items-center bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-gray-600 transition-colors">
-                <FcGoogle
-                  onClick={handleGoogleSignIn}
-                  className="mr-2 w-5 h-5"
-                />
+                <FcGoogle className="mr-2 w-5 h-5" />
                 Connect with Google
               </button>
               <button className="flex justify-center items-center bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-gray-600 transition-colors">
