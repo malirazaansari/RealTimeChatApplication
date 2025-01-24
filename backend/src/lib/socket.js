@@ -53,15 +53,19 @@ io.on("connection", (socket) => {
   });
 
   socket.on("readMessage", async ({ messageId, senderId }) => {
-    if (!mongoose.Types.ObjectId.isValid(messageId)) {
-      console.error(`Invalid messageId: ${messageId}`);
-      return;
-    }
-    await Message.findByIdAndUpdate(messageId, { status: "read" });
+    try {
+      if (!mongoose.Types.ObjectId.isValid(messageId)) {
+        console.error(`Invalid messageId: ${messageId}`);
+        return;
+      }
+      await Message.findByIdAndUpdate(messageId, { status: "read" });
 
-    const senderSocketId = getReceiverSocketId(senderId);
-    if (senderSocketId) {
-      io.to(senderSocketId).emit("messageRead", { messageId });
+      const senderSocketId = getReceiverSocketId(senderId);
+      if (senderSocketId) {
+        io.to(senderSocketId).emit("messageRead", { messageId });
+      }
+    } catch (error) {
+      console.error("Error updating message status:", error);
     }
   });
 

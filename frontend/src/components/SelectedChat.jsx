@@ -73,13 +73,46 @@ const SelectedChat = () => {
         message.receiverId === authUser._id && message.status !== "read"
     );
 
-    unreadMessages.forEach((message) => {
-      socket.emit("readMessage", {
-        messageId: message._id,
-        sendId: message.sendId,
+    console.log("Unread messages:", unreadMessages);
+
+    if (unreadMessages.length > 0) {
+      unreadMessages.forEach((message) => {
+        console.log("Marking message as read:", message._id);
+        socket.emit("readMessage", {
+          messageId: message._id,
+          senderId: message.sendId,
+        });
       });
-    });
+
+      const updatedMessages = messages.map((message) =>
+        unreadMessages.some((unread) => unread._id === message._id)
+          ? { ...message, status: "read" }
+          : message
+      );
+
+      console.log("Updated messages:", updatedMessages);
+
+      useChatStore.setState({ messages: updatedMessages });
+    }
   }, [selectedUser, messages, socket, authUser]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleMessageSeen = ({ messageId }) => {
+      const updatedMessages = messages.map((msg) =>
+        msg._id === messageId ? { ...msg, status: "read" } : msg
+      );
+
+      useChatStore.setState({ messages: updatedMessages });
+    };
+
+    socket.on("messageSeen", handleMessageSeen);
+
+    return () => {
+      socket.off("messageSeen", handleMessageSeen);
+    };
+  }, [socket, messages]);
 
   if (isMessagesLoading) {
     return (
@@ -92,14 +125,11 @@ const SelectedChat = () => {
   }
   return (
     <div className="flex flex-col bg-[#F4F4F4] w-full h-full">
-      {/* ChatHeader */}
       <div className="top-0 z-10 sticky bg-[#F4F4F4] p-4 border-b">
         <ChatHeader />
       </div>
 
-      {/* Messages container */}
       <div className="flex-1 mb-[72px] overflow-y-auto">
-        {/* Display no messages text */}
         {!messages.length && (
           <p className="text-center text-gray-500">
             No messages to display. Start the conversation!
@@ -155,12 +185,9 @@ const SelectedChat = () => {
             {selectedUser.name} is typing...
           </p>
         )}
-
-        {/* Scroll to the end */}
         <div ref={messageEndRef}></div>
       </div>
 
-      {/* MessageInput */}
       <div className="bottom-0 z-10 sticky bg-[#F4F4F4] p-4 border-t">
         <MessageInput />
       </div>
