@@ -10,6 +10,8 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: ["http://localhost:5173"],
+    methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
@@ -24,7 +26,7 @@ export function getReceiverSocketId(userId) {
 const userSocketMap = {};
 io.on("connection", (socket) => {
   console.log("a user connected", socket.id);
-  console.log("Socket handshake query:", socket.handshake.query);
+  // console.log("Socket handshake query:", socket.handshake.query);
   const userId = socket.handshake.query.userId;
 
   if (!userId || userId === "undefined") {
@@ -33,10 +35,18 @@ io.on("connection", (socket) => {
   }
 
   userSocketMap[userId] = socket.id;
-  console.log(`User ${userId} connected with socket ID ${socket.id}`);
-  console.log("Current userSocketMap:", userSocketMap);
+  // console.log(`User ${userId} connected with socket ID ${socket.id}`);
+  // console.log("Current userSocketMap:", userSocketMap);
+  console.log(
+    `User ${userId} connected. Current userSocketMap:`,
+    userSocketMap
+  );
 
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
+  console.log(
+    "Emitted getOnlineUsers event after connection:",
+    Object.keys(userSocketMap)
+  );
 
   socket.on("typing", ({ senderId, receiverId }) => {
     const receiverSocketId = getReceiverSocketId(receiverId);
@@ -68,20 +78,24 @@ io.on("connection", (socket) => {
       console.error("Error updating message status:", error);
     }
   });
+  socket.on("requestOnlineUsers", () => {
+    socket.emit("getOnlineUsers", Object.keys(userSocketMap));
+  });
 
   socket.on("disconnect", () => {
-    const userId = Object.keys(userSocketMap).find(
+    const disconnectedUserId = Object.keys(userSocketMap).find(
       (key) => userSocketMap[key] === socket.id
     );
 
-    if (userId) {
-      delete userSocketMap[userId];
-      console.log(`User ${userId} disconnected`);
-    } else {
-      console.warn(`No userId found for disconnected socket ${socket.id}`);
+    if (disconnectedUserId) {
+      delete userSocketMap[disconnectedUserId];
+      console.log(`User ${disconnectedUserId} disconnected`);
     }
-
-    io.emit("getOnlineUsers", Object.keys(userSocketMap));
+    io.emit("getOnlineUsers", Object.keys(userSocketMap)); // Update online users
+    console.log(
+      "Emitted getOnlineUsers event after disconnection:",
+      Object.keys(userSocketMap)
+    );
   });
 });
 

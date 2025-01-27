@@ -16,7 +16,8 @@ import { Toaster } from "react-hot-toast";
 import { useThemeStore } from "./store/useThemeStore";
 
 const App = () => {
-  const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
+  const { authUser, checkAuth, isCheckingAuth, onlineUsers, connectSocket } =
+    useAuthStore();
   const { theme } = useThemeStore();
 
   console.log({ onlineUsers });
@@ -24,7 +25,13 @@ const App = () => {
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
-  console.log({ authUser });
+
+  useEffect(() => {
+    if (!authUser) return;
+    console.log({ authUser });
+    connectSocket();
+  }, [authUser]);
+
   if (isCheckingAuth && !authUser)
     return (
       <div className="flex justify-center items-center h-screen">
