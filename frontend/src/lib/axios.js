@@ -6,5 +6,5 @@ export const axiosInstance = axios.create({
   //     ? "http://localhost:5001/api"
   //     : "/api",
   baseURL: `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api`,
-  withCredentials: true, // To send cookies with requests
+  withCredentials: true,
 });
