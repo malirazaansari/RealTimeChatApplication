@@ -41,3 +41,5 @@ server.listen(PORT, () => {
   console.log("server listening on PORT:" + PORT);
   connectDB();
 });
+
+// "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend && npm run build --prefix backend",
