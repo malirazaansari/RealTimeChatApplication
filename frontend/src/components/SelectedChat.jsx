@@ -135,6 +135,7 @@ const SelectedChat = () => {
             No messages to display. Start the conversation!
           </p>
         )}
+
         {messages.map((message) => (
           <div
             key={message._id}
@@ -157,7 +158,15 @@ const SelectedChat = () => {
 
             <div className="mb-1 chat-header">
               <span className="opacity-50 ml-1 text-xs">
-                {new Date(message.createdAt).toLocaleTimeString()}
+                {new Date(message.createdAt).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                })}{" "}
+                {new Date(message.createdAt).toLocaleTimeString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
+                })}
               </span>
             </div>
 
@@ -169,7 +178,9 @@ const SelectedChat = () => {
                   className="mb-2 rounded-md sm:max-w-[200px]"
                 />
               )}
-              {message.text && <p>{message.text}</p>}
+              <div className="break-all">
+                {message.text && <p>{message.text}</p>}
+              </div>
 
               {message.sendId === authUser._id && (
                 <span className="mt-1 text-gray-500 text-xs">
