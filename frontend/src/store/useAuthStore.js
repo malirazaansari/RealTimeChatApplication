@@ -11,7 +11,6 @@ const BASE_URL =
     ? "http://localhost:5001"
     : "https://realtimechatapplication-production.up.railway.app";
 
-// Dynamically set WebSocket URL
 const SOCKET_URL =
   window.location.hostname === "localhost"
     ? "ws://localhost:5001"
@@ -109,7 +108,7 @@ export const useAuthStore = create((set, get) => ({
     if (!authUser || !authUser._id) return;
     console.log("Connecting socket with userId::", authUser._id);
 
-    if (get().socket?.connected) return; // Avoid multiple connections
+    if (get().socket?.connected) return;
 
     console.log("Connecting socket with userId:", authUser._id);
 
@@ -134,7 +133,6 @@ export const useAuthStore = create((set, get) => ({
       console.log("Online users received:", userIds);
       set({ onlineUsers: userIds });
     });
-    // socket.on("connect", () => console.log("Socket connected:", socket.id));
     socket.on("disconnect", () => console.log("Socket disconnected"));
     socket.on("connect_error", (err) =>
       console.error("Socket connection error:", err)
