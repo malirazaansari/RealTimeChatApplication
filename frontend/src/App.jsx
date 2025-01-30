@@ -30,7 +30,8 @@ const App = () => {
     if (!authUser) return;
     console.log({ authUser });
     connectSocket();
-  }, [authUser]);
+  }, [authUser, connectSocket]);
+  console.log("Auth User State:", authUser);
 
   if (isCheckingAuth && !authUser)
     return (

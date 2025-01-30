@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdEmail } from "react-icons/md";
 import { RiLoader2Fill, RiLockPasswordLine } from "react-icons/ri";
 import { FcGoogle } from "react-icons/fc";
@@ -10,6 +10,7 @@ import { FiEyeOff } from "react-icons/fi";
 import toast from "react-hot-toast";
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -41,10 +42,23 @@ const SignUp = () => {
     return true;
   };
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     const sucess = validateForm();
-    if (sucess === true) signup(formData);
+    // if (sucess === true) signup(formData);
+    if (!sucess) return;
+
+    try {
+      const response = await signup(formData); // Make API call to signup
+      if (response?.message) {
+        toast.success(response.message);
+      } else {
+        toast.success("Signup successful. Please log in.");
+      }
+      setTimeout(() => navigate("/login"), 1000); // Redirect after 2 seconds
+    } catch (error) {
+      toast.error(error.message || "Signup failed");
+    }
   };
 
   return (
