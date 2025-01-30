@@ -40,20 +40,18 @@ export const getMessages = async (req, res) => {
     };
 
     console.log("Query:", query);
-
     const { page = 1, limit = 20 } = req.query;
 
-    const messages = await Message.find(query)
-      .sort({ createdAt: "asc" })
-      .skip((page - 1) * limit)
-      .limit(limit);
+    const messages = await Message.find(query).sort({ createdAt: -1 });
+    // .skip((page - 1) * limit)
+    // .limit(limit);
     console.log("Messages Found:", messages);
 
     if (messages.length === 0) {
       console.warn("No messages found for the given users.");
     }
 
-    res.status(200).json(messages);
+    res.status(200).json(messages.reverse());
   } catch (error) {
     console.error("Error in getMessages:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
