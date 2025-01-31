@@ -67,15 +67,40 @@ io.on("connection", (socket) => {
 
   socket.on("readMessage", async ({ messageId, senderId }) => {
     try {
+      // if (!mongoose.Types.ObjectId.isValid(messageId)) {
+      //   console.error(`Invalid messageId: ${messageId}`);
+      //   return;
+      // }
+      // await Message.findByIdAndUpdate(messageId, { status: "read" });
+
+      // const senderSocketId = getReceiverSocketId(senderId);
+      // if (senderSocketId) {
+      //   io.to(senderSocketId).emit("messageRead", { messageId });
+      // }
       if (!mongoose.Types.ObjectId.isValid(messageId)) {
         console.error(`Invalid messageId: ${messageId}`);
         return;
       }
-      await Message.findByIdAndUpdate(messageId, { status: "read" });
 
+      // Update the message status in the database
+      const updatedMessage = await Message.findByIdAndUpdate(
+        messageId,
+        { status: "read" },
+        { new: true } // Returns the updated message
+      );
+
+      if (!updatedMessage) {
+        console.error("Message not found");
+        return;
+      }
+
+      // Send real-time update to sender
       const senderSocketId = getReceiverSocketId(senderId);
       if (senderSocketId) {
-        io.to(senderSocketId).emit("messageRead", { messageId });
+        io.to(senderSocketId).emit("messageRead", {
+          messageId,
+          status: "read",
+        });
       }
     } catch (error) {
       console.error("Error updating message status:", error);

@@ -107,10 +107,10 @@ const SelectedChat = () => {
       useChatStore.setState({ messages: updatedMessages });
     };
 
-    socket.on("messageSeen", handleMessageSeen);
+    socket.on("messageRead", handleMessageSeen);
 
     return () => {
-      socket.off("messageSeen", handleMessageSeen);
+      socket.off("messageRead", handleMessageSeen);
     };
   }, [socket, messages]);
 

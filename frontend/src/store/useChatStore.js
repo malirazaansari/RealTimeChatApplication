@@ -40,8 +40,17 @@ export const useChatStore = create((set, get) => ({
 
       const res = await axiosInstance.get(`/messages/${userId}`, { params });
 
+      // Ensure each message has a valid status
+      const updatedMessages = res.data.map((msg) => ({
+        ...msg,
+        status: msg.status || "delivered", // Default to "delivered" if missing
+      }));
+
       set((state) => ({
-        messages: isFetchingMore ? [...res.data, ...state.messages] : res.data,
+        messages: isFetchingMore
+          ? [...updatedMessages, ...state.messages]
+          : updatedMessages,
+        // messages: isFetchingMore ? [...res.data, ...state.messages] : res.data,
       }));
     } catch (error) {
       const errorMessage =

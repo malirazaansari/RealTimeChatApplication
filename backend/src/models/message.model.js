@@ -18,6 +18,11 @@ const messageSchema = new mongoose.Schema(
     image: {
       type: String,
     },
+    status: {
+      type: String,
+      enum: ["delivered", "read"], // Only allows "delivered" or "read"
+      default: "delivered",
+    },
   },
   {
     timestamps: true,
