@@ -1,5 +1,6 @@
 import express from "express";
 import authRoutes from "./routes/auth.routes.js";
+import friendRoutes from "./routes/friend.routes.js";
 import messageRoutes from "./routes/message.routes.js";
 import dotenv from "dotenv";
 import { connectDB } from "./lib/db.js";
@@ -34,11 +35,11 @@ app.use(
     credentials: true,
   })
 );
-// app.use(cors({ origin: "*" }));
 // app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/friends", friendRoutes);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
@@ -51,5 +52,3 @@ server.listen(PORT, () => {
   console.log("server listening on PORT:" + PORT);
   connectDB();
 });
-
-// "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend && npm run build --prefix backend",
